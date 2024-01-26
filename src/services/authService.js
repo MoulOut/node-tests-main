@@ -17,13 +17,13 @@ class AuthService {
       const usuario = await Usuario.pegarPeloEmail(data.email);
 
       if (!usuario) {
-        throw new Error('Usuario não cadastrado.');
+        throw new Error('Usuário não cadastrado.');
       }
 
       const senhaIguais = await bcryptjs.compare(data.senha, usuario.senha);
 
       if (!senhaIguais) {
-        throw new Error('Usuario ou senha invalido.');
+        throw new Error('Usuário ou senha invalido.');
       }
 
       const accessToken = jsonwebtoken.sign(
@@ -37,7 +37,7 @@ class AuthService {
         },
       );
 
-      return { message: 'Usuario conectado', accessToken };
+      return { message: 'Usuário conectado', accessToken };
     } catch (err) {
       throw new Error(err.message);
     }
@@ -45,11 +45,17 @@ class AuthService {
 
   async cadastrarUsuario(data) {
     try {
-      const checkUsers = await Usuario.pegarPeloEmail(data.email);
-      if (!data.senha) {
-        throw new Error('A senha de usuario é obrigatória.');
+      if (!data.nome) {
+        throw new Error('O nome de usuário é obrigatório!');
       }
-      if (checkUsers) {
+      if (!data.email) {
+        throw new Error('O email de usuário é obrigatório!');
+      }
+      if (!data.senha) {
+        throw new Error('A senha de usuário é obrigatória!');
+      }
+      const usuarioCadastrado = await Usuario.pegarPeloEmail(data.email);
+      if (usuarioCadastrado) {
         throw new Error('O email já esta cadastrado!');
       }
       data.senha = await bcryptjs.hash(data.senha, 8);

@@ -14,7 +14,7 @@ describe('Testing authService.cadastrar usuario', () => {
 
     const savedUser = authService.cadastrarUsuario(mockUser);
 
-    await expect(savedUser).rejects.toThrowError('A senha de usuario é obrigatória.');
+    await expect(savedUser).rejects.toThrowError('A senha de usuário é obrigatória!');
   });
 
   it('User password must be encrypted before inserting in DB', async () => {
